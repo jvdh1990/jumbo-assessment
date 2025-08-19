@@ -6,9 +6,9 @@
     <!-- Open/Closed status -->
     <template v-if="getStoreStatus(store).isOpen">
       <div class="flex items-center mt-3">
-        <div class="store-tile__status -open text-base p-1 px-3">Open now</div>
+        <div class="store-tile__status -open text-base rounded-2xl p-1 px-3">Open</div>
         <span v-if="getStoreStatus(store).nextClosing" class="text-base ml-2">
-          closes {{ getStoreStatus(store).nextClosing }}
+          closes at {{ getStoreStatus(store).nextClosing }}
         </span>
       </div>
     </template>
@@ -52,16 +52,17 @@ function getStoreStatus(store) {
   if (hours && hours.opensAt && hours.closesAt) {
     const openMinutes = parseTime(hours.opensAt)
     const closeMinutes = parseTime(hours.closesAt)
+    const closeTime = hours.closesAt.slice(0, 5)
 
     if (openMinutes !== null && closeMinutes !== null) {
       // Handle overnight (e.g. 20:00 → 02:00)
       if (closeMinutes < openMinutes) {
         if (currentMinutes >= openMinutes || currentMinutes < closeMinutes) {
-          return { isOpen: true, nextOpening: null, nextClosing: `${closeMinutes}` }
+          return { isOpen: true, nextOpening: null, nextClosing: `${closeTime}` }
         }
       } else {
         if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
-          return { isOpen: true, nextOpening: null, nextClosing: `${closeMinutes}` }
+          return { isOpen: true, nextOpening: null, nextClosing: `${closeTime}` }
         }
       }
     }
